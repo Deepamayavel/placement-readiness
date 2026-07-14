@@ -22,7 +22,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export const revalidate = 60
 
 const DAY_THEMES: Record<string, { title: string; desc: string; tasks: string[] }> = {
-  '2026-07-10': {
+  '2026-07-14': {
+    title: 'Sample Day: Orientation',
+    desc: 'Mock data generated for every student to test the UI logic and markdown viewer.',
+    tasks: [
+      'Write a sample README.md',
+      'Reflect on the orientation',
+      'Test the frontend UI',
+    ],
+  },
+  '2026-07-15': {
     title: 'Foundation Day: Claim Your Folder',
     desc: 'The goal of this day is purely operational — every student experiences the full Git loop once.',
     tasks: [
@@ -32,7 +41,7 @@ const DAY_THEMES: Record<string, { title: string; desc: string; tasks: string[] 
       'Commit → push → open PR to main',
     ],
   },
-  '2026-07-11': {
+  '2026-07-16': {
     title: 'Solve First, Ask Smart',
     desc: 'Two-phase individual activity: solve without AI first, then with structured prompting.',
     tasks: [
@@ -41,7 +50,7 @@ const DAY_THEMES: Record<string, { title: string; desc: string; tasks: string[] 
       'Submit README.md, reflection.md, and prompts.md',
     ],
   },
-  '2026-07-12': {
+  '2026-07-17': {
     title: 'Debug Battle',
     desc: 'Team-based activity: debug a deliberately-broken codebase. Individual PRs still required.',
     tasks: [
@@ -50,7 +59,7 @@ const DAY_THEMES: Record<string, { title: string; desc: string; tasks: string[] 
       'Each member submits their own README.md, reflection.md, and prompts.md documenting their specific findings',
     ],
   },
-  '2026-07-13': {
+  '2026-07-18': {
     title: 'Mini Build: Reverse-Engineer a Feature',
     desc: 'Team-based design thinking exercise — produce an architecture diagram and write-up.',
     tasks: [
@@ -60,13 +69,31 @@ const DAY_THEMES: Record<string, { title: string; desc: string; tasks: string[] 
       'Each member submits their own README.md, reflection.md, prompts.md',
     ],
   },
-  '2026-07-14': {
+  '2026-07-20': {
     title: 'Demo Day + Leaderboard Reveal',
     desc: 'Teams present their best work; final PRs merged live; weekly leaderboard revealed.',
     tasks: [
       'Prepare a 5-minute team demo of your best Day 3 or Day 4 output',
       'Submit final reflection.md and prompts.md for the week',
       'Watch the live leaderboard reveal on the website',
+    ],
+  },
+  '2026-07-21': {
+    title: 'Advanced Topics',
+    desc: 'Deep dive into advanced concepts and system design.',
+    tasks: [
+      'Participate in the system design workshop',
+      'Complete the advanced topics quiz',
+      'Submit your reflection.md',
+    ],
+  },
+  '2026-07-22': {
+    title: 'Final Presentation',
+    desc: 'Final capstone project presentations and wrap up.',
+    tasks: [
+      'Present your final capstone project',
+      'Submit the final project README.md and documentation',
+      'Celebrate the completion of the programme',
     ],
   },
 }

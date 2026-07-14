@@ -17,11 +17,14 @@ export default async function ActivitiesPage() {
   const activityDays = buildActivityDays(roster, attendance)
 
   const DAY_THEMES: Record<string, { title: string; desc: string }> = {
-    '2026-07-10': { title: 'Foundation Day',          desc: 'Claim your folder — Git, forks, and first PRs.' },
-    '2026-07-11': { title: 'Solve First, Ask Smart',  desc: 'No-AI phase → AI-assisted phase → structured reflection.' },
-    '2026-07-12': { title: 'Debug Battle',            desc: 'Team-based: debug a planted-bug codebase together.' },
-    '2026-07-13': { title: 'Mini Build',              desc: 'Reverse-engineer a feature, produce architecture diagram.' },
-    '2026-07-14': { title: 'Demo Day',                desc: 'Team presentations, live leaderboard reveal, weekly report.' },
+    '2026-07-14': { title: 'Sample Day: Orientation', desc: 'Mock data for all students to test the frontend markdown viewer.' },
+    '2026-07-15': { title: 'Foundation Day',          desc: 'Claim your folder — Git, forks, and first PRs.' },
+    '2026-07-16': { title: 'Solve First, Ask Smart',  desc: 'No-AI phase → AI-assisted phase → structured reflection.' },
+    '2026-07-17': { title: 'Debug Battle',            desc: 'Team-based: debug a planted-bug codebase together.' },
+    '2026-07-18': { title: 'Mini Build',              desc: 'Reverse-engineer a feature, produce architecture diagram.' },
+    '2026-07-20': { title: 'Demo Day',                desc: 'Team presentations, live leaderboard reveal, weekly report.' },
+    '2026-07-21': { title: 'Advanced Topics',         desc: 'Deep dive into advanced concepts and system design.' },
+    '2026-07-22': { title: 'Final Presentation',      desc: 'Final capstone project presentations and wrap up.' },
   }
 
   return (
