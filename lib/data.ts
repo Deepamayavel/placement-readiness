@@ -73,7 +73,7 @@ export function getDaysRun(attendance: Attendance): string[] {
       }
     }
   }
-  return [...allDays].sort()
+  return Array.from(allDays).sort()
 }
 
 /** The most recent day that had submissions */
@@ -158,7 +158,7 @@ export function buildActivityDays(
     for (const day of Object.keys(studentAtt)) allDays.add(day)
   }
 
-  const days = [...allDays].sort()
+  const days = Array.from(allDays).sort()
   const totalStudents = Object.keys(roster).length
 
   return days.map(id => {
