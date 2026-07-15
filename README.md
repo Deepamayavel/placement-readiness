@@ -9,7 +9,7 @@
 A fully transparent, GitHub-driven leaderboard and submission portal. No database, no logins. Everything is driven by PRs and Markdown files.  
 > Students fork → work in their own folder → open PR → owner merges → leaderboard updates automatically.
 
-📊 **Live Site:** [placement-readiness.vercel.app](https://placement-readiness.vercel.app)  
+📊 **Live Site:** [class.psgmx.tech](https://class.psgmx.tech/)  
 📖 **How to contribute:** [HOW_TO_CONTRIBUTE.md](./HOW_TO_CONTRIBUTE.md)  
 👤 **Owner guide:** [OWNER_GUIDE.md](./docs/OWNER_GUIDE.md)
 
@@ -68,7 +68,7 @@ If you want to run the portal locally:
 
 ## Quick Links
 
-- 🔴 **Students who haven't submitted today** — check the [live dashboard](https://placement-readiness.vercel.app)
-- 📋 [Full Leaderboard](https://placement-readiness.vercel.app/leaderboard)
-- 👥 [Team Standings](https://placement-readiness.vercel.app/teams)
-- 📅 [Activity Timeline](https://placement-readiness.vercel.app/activities)
+- 🔴 **Students who haven't submitted today** — check the [live dashboard](https://class.psgmx.tech/)
+- 📋 [Full Leaderboard](https://class.psgmx.tech/leaderboard)
+- 👥 [Team Standings](https://class.psgmx.tech/teams)
+- 📅 [Activity Timeline](https://class.psgmx.tech/activities)

@@ -8,7 +8,7 @@ import {
   buildTeamSummaries,
   buildActivityDays,
   getDaysRun,
-  getLatestDay,
+  getTodayId,
 } from '@/lib/data'
 import { AggregatedHeatmap } from '@/components/Heatmap'
 
@@ -22,16 +22,16 @@ export const revalidate = 60
 export default async function DashboardPage() {
   const { roster, scoreboard, attendance, teams } = await getAllData()
   const daysRun = getDaysRun(attendance)
-  const latestDay = getLatestDay(attendance)
+  const todayId = getTodayId()
   const students = buildStudentSummaries(roster, scoreboard, attendance)
   const teamSummaries = buildTeamSummaries(teams, roster, scoreboard, attendance)
   const activityDays = buildActivityDays(roster, attendance)
 
   const totalStudents = Object.keys(roster).length
-  const latestActivityDay = activityDays.find(d => d.id === latestDay)
+  const todayActivityDay = activityDays.find(d => d.id === todayId)
   
-  const todaySubmissions = latestActivityDay ? latestActivityDay.submissionCount : 0
-  const todaySubmittedStudents = latestActivityDay ? latestActivityDay.submitters : []
+  const todaySubmissions = todayActivityDay ? todayActivityDay.submissionCount : 0
+  const todaySubmittedStudents = todayActivityDay ? todayActivityDay.submitters : []
 
   const overallAttendancePct =
     daysRun.length > 0 && totalStudents > 0
@@ -53,10 +53,9 @@ export default async function DashboardPage() {
     else break;
   }
 
-  // Format the latest day label cleanly
-  const currentDayLabel = latestDay 
-    ? new Date(latestDay).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
-    : 'No sessions yet'
+  // Format the today date cleanly in IST
+  const istTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }))
+  const currentDayLabel = istTime.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
   return (
     <div className="space-y-8 animate-fade-in pb-12">
@@ -145,24 +144,22 @@ export default async function DashboardPage() {
         <div className="card lg:col-span-2">
           <div className="flex items-center justify-between mb-6">
             <h2 className="font-bold text-lg text-white">Today's Status</h2>
-            {latestDay && (
-              <Link href={`/activities/${latestDay}`} className="text-xs font-bold text-brand-500 hover:text-brand-400 transition-colors">
-                View day detail →
-              </Link>
-            )}
+            <Link href={`/activities/${todayId}`} className="text-xs font-bold text-brand-500 hover:text-brand-400 transition-colors">
+              View day detail →
+            </Link>
           </div>
           
           <div className="bg-[#050505] border border-slate-800 rounded-xl p-5 mb-5">
             <div className="flex justify-between items-center mb-2">
               <span className="font-semibold text-white text-sm">{currentDayLabel} Submissions</span>
               <span className="text-brand-400 text-xs font-bold bg-brand-500/10 px-2 py-1 rounded border border-brand-500/20">
-                {todaySubmissions}/{totalStudents} - {latestActivityDay ? latestActivityDay.submissionRate : 0}%
+                {todaySubmissions}/{totalStudents} - {todayActivityDay ? todayActivityDay.submissionRate : 0}%
               </span>
             </div>
             <div className="progress-bar w-full bg-slate-900 h-2 mb-3 shadow-inner">
               <div 
                 className="progress-fill bg-brand-500 shadow-[0_0_10px_rgba(245,158,11,0.8)]" 
-                style={{ width: `${latestActivityDay ? latestActivityDay.submissionRate : 0}%` }}
+                style={{ width: `${todayActivityDay ? todayActivityDay.submissionRate : 0}%` }}
               />
             </div>
             <p className="text-xs text-slate-500 flex items-center gap-1.5">

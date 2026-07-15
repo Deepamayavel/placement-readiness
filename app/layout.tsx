@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   },
   description:
     'Public leaderboard and proof portal for the 25MX Placement Readiness programme. Track submissions, scores, and attendance across all students and teams.',
-  metadataBase: new URL('https://placement-readiness.vercel.app'),
+  metadataBase: new URL('https://class.psgmx.tech/'),
   openGraph: {
     type: 'website',
     locale: 'en_IN',

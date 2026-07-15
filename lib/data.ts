@@ -78,10 +78,13 @@ export function getDaysRun(attendance: Attendance): string[] {
   return Array.from(allDays).sort()
 }
 
-/** The most recent day that had submissions */
-export function getLatestDay(attendance: Attendance): string | null {
-  const days = getDaysRun(attendance)
-  return days.length > 0 ? days[days.length - 1] : null
+/** Get today's date in IST (YYYY-MM-DD) */
+export function getTodayId(): string {
+  const istTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }))
+  const yyyy = istTime.getFullYear()
+  const mm = String(istTime.getMonth() + 1).padStart(2, '0')
+  const dd = String(istTime.getDate()).padStart(2, '0')
+  return `${yyyy}-${mm}-${dd}`
 }
 
 /** Build a sorted array of StudentSummary for leaderboard use */
@@ -91,7 +94,7 @@ export function buildStudentSummaries(
   attendance: Attendance,
 ): StudentSummary[] {
   const daysRun = getDaysRun(attendance)
-  const latestDay = daysRun[daysRun.length - 1] ?? null
+  const todayId = getTodayId()
 
   return Object.entries(roster)
     .map(([roll, info]) => {
@@ -107,9 +110,7 @@ export function buildStudentSummaries(
         ? Math.round((attendanceCount / attendanceDays) * 100)
         : 0
 
-      const hasSubmittedToday = latestDay
-        ? (studentAtt[latestDay] === 'present' || studentAtt[latestDay] === 'manual-present')
-        : false
+      const hasSubmittedToday = studentAtt[todayId] === 'present' || studentAtt[todayId] === 'manual-present'
 
       return {
         roll,

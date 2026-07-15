@@ -39,8 +39,12 @@ if (!roster || !scoreboard || !attendance || !teams) {
 // ── Compute helpers ──────────────────────────────────────────────────────────
 const totalRoster = Object.keys(roster).length;
 
-// Today's date (UTC, formatted YYYY-MM-DD)
-const today = new Date().toISOString().split('T')[0];
+// Today's date (IST, formatted YYYY-MM-DD)
+const istTime = new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+const yyyy = istTime.getFullYear();
+const mm = String(istTime.getMonth() + 1).padStart(2, '0');
+const dd = String(istTime.getDate()).padStart(2, '0');
+const today = `${yyyy}-${mm}-${dd}`;
 
 // Submissions today = students where any day's attendance entry has today's date
 // Since attendance is stored as 2026-07-10/2026-07-11 etc., we track "most recent day that had submissions"
