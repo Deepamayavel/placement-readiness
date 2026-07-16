@@ -106,17 +106,6 @@ export default function Sidebar({ githubOwner, githubRepo }: SidebarProps) {
 
       {/* Bottom section with hexagon */}
       <div className="px-6 pb-8 relative mt-auto">
-        <div className="absolute inset-x-0 bottom-0 h-64 pointer-events-none opacity-40 mix-blend-screen flex items-end justify-center">
-          <Image 
-            src="/hexagon.png" 
-            alt="Glowing Hexagon" 
-            fill 
-            className="object-contain object-bottom translate-y-12"
-            sizes="(max-width: 768px) 100vw, 256px"
-            priority
-          />
-        </div>
-        
         <div className="bg-[#0a0a0a]/80 backdrop-blur-md border border-slate-800/60 rounded-xl p-4 relative z-10">
           <div className="flex items-start justify-between">
             <p className="text-xs font-medium text-slate-400 leading-relaxed mb-4">
