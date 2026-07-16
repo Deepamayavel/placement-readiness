@@ -58,7 +58,8 @@ if (!roster[authorRoll]) {
 // ── Allowed path patterns ────────────────────────────────────────────────────
 const allowedPatterns = [
   new RegExp(`^students/${authorRoll}/`),
-  new RegExp(`^activities/day\\d+/${authorRoll}/`),
+  // ISO date format: activities/2026-07-16/ROLL/
+  new RegExp(`^activities/\\d{4}-\\d{2}-\\d{2}/${authorRoll}/`),
 ];
 
 const errors = [];
@@ -69,7 +70,7 @@ for (const file of changedFiles) {
   const normalised = file.replace(/\\/g, '/');
   const allowed = allowedPatterns.some(p => p.test(normalised));
   if (!allowed) {
-    errors.push(`🚫 File outside allowed path: "${file}"\n   Allowed paths: students/${authorRoll}/ and activities/dayXX/${authorRoll}/`);
+    errors.push(`🚫 File outside allowed path: "${file}"\n   Allowed paths: students/${authorRoll}/ and activities/YYYY-MM-DD/${authorRoll}/`);
     continue;
   }
 
@@ -94,8 +95,8 @@ for (const file of changedFiles) {
 }
 
 // ── Required-files check for activity submissions ────────────────────────────
-// Detect which days are included in this PR
-const dayPattern = /^activities\/(day\d+)\/[^/]+\//;
+// Detect which days (ISO date folders) are included in this PR
+const dayPattern = /^activities\/(\d{4}-\d{2}-\d{2})\/[^/]+\//;
 const daysInPR = new Set(
   changedFiles
     .map(f => f.replace(/\\/g, '/').match(dayPattern)?.[1])
@@ -108,8 +109,8 @@ for (const day of daysInPR) {
 
   const required = ['README.md'];
 
-  // 2026-07-10 is profile-only — no reflection/prompts required
-  if (day !== '2026-07-10') {
+  // 2026-07-15 is foundation/profile day — no reflection/prompts required
+  if (day !== '2026-07-15') {
     required.push('reflection.md', 'prompts.md');
   }
 

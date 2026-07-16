@@ -8,7 +8,7 @@ const navLinks = [
   { href: '/',                  label: 'Dashboard',         icon: DashboardIcon },
   { href: '/leaderboard',       label: 'Leaderboard',       icon: TrophyIcon },
   { href: '/teams',             label: 'Teams',             icon: UsersIcon },
-  { href: '/activities',        label: 'Activities',        icon: CalendarIcon },
+  { href: '/activities',        label: 'Missions',          icon: CalendarIcon },
   { href: '/how-to-contribute', label: 'How to Contribute', icon: QuestionIcon },
 ]
 

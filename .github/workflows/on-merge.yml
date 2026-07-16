@@ -50,7 +50,7 @@ jobs:
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           
-          git add scoreboard.json attendance.json teams.json README.md
+          git add data/scoreboard.json data/attendance.json data/teams.json README.md
           
           # Only commit if there are actual changes
           if git diff --cached --quiet; then

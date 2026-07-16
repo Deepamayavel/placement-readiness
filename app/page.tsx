@@ -11,6 +11,7 @@ import {
   getTodayId,
 } from '@/lib/data'
 import { AggregatedHeatmap } from '@/components/Heatmap'
+import { getTodayMission, getMission } from '@/lib/missions'
 
 export const metadata: Metadata = {
   title: 'Dashboard — Placement Readiness Portal',
@@ -26,6 +27,7 @@ export default async function DashboardPage() {
   const students = buildStudentSummaries(roster, scoreboard, attendance)
   const teamSummaries = buildTeamSummaries(teams, roster, scoreboard, attendance)
   const activityDays = buildActivityDays(roster, attendance)
+  const todayMission = getTodayMission()
 
   const totalStudents = Object.keys(roster).length
   const todayActivityDay = activityDays.find(d => d.id === todayId)
@@ -72,14 +74,28 @@ export default async function DashboardPage() {
             Live Dashboard
           </div>
           <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight leading-[1.1] mb-4 drop-shadow-lg">
-            Placement Readiness <br />
+            30-Day Engineering <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-brand-500 to-yellow-600 drop-shadow-2xl">
-              Programme 25MX
+              Sprint — 25MX
             </span>
           </h1>
           <p className="text-slate-400 text-lg md:text-xl font-medium max-w-lg">
-            Tracking daily submissions, cohort performance, and team standings. <span className="text-white">{daysRun.length} day{daysRun.length !== 1 ? 's' : ''} run so far.</span>
+            {daysRun.length} mission{daysRun.length !== 1 ? 's' : ''} complete.{' '}
+            <span className="text-white">No login required — all {Object.keys(roster).length} students tracked.</span>
           </p>
+          {todayMission && (
+            <Link
+              href={`/activities/${todayMission.date}`}
+              className="mt-5 inline-flex items-center gap-3 px-4 py-2.5 rounded-xl bg-brand-500/15 border border-brand-500/30 hover:bg-brand-500/25 transition-all group"
+            >
+              <span className="text-xl">{todayMission.companyIcon}</span>
+              <div>
+                <div className="text-[10px] font-bold text-brand-400 uppercase tracking-widest">Today&apos;s Mission</div>
+                <div className="text-sm font-bold text-white">{todayMission.missionName}</div>
+              </div>
+              <span className="text-brand-500 ml-1 group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -383,25 +399,31 @@ export default async function DashboardPage() {
             </Link>
           </div>
           <div className="flex-1 bg-[#050505] border border-slate-800 rounded-xl p-6 space-y-6">
-            {activityDays.slice(0, 5).map((day, i) => (
-              <div key={day.id}>
-                <div className="flex justify-between items-center mb-2">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-brand-400">
-                      {i === 0 ? <ShieldIcon className="w-4 h-4" /> : i === 1 ? <DocumentIcon className="w-4 h-4" /> : i === 2 ? <UsersGroupIcon className="w-4 h-4" /> : <CrownIcon className="w-4 h-4" />}
+            {activityDays.slice(0, 5).map((day, i) => {
+              const m = getMission(day.id)
+              return (
+                <div key={day.id}>
+                  <div className="flex justify-between items-center mb-2">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-brand-400 text-base">
+                        {m?.companyIcon ?? (i === 0 ? <ShieldIcon className="w-4 h-4" /> : i === 1 ? <DocumentIcon className="w-4 h-4" /> : <CrownIcon className="w-4 h-4" />)}
+                      </div>
+                      <div>
+                        <span className="font-semibold text-slate-300 text-sm">{m?.missionName ?? day.label}</span>
+                        {m && <div className="text-[10px] text-slate-600">{m.skill}</div>}
+                      </div>
                     </div>
-                    <span className="font-semibold text-slate-300 text-sm">{day.label}</span>
+                    <div className="flex items-center gap-4">
+                      <span className="text-xs font-mono text-slate-500">{day.submissionCount}/{day.totalStudents}</span>
+                      <span className="text-xs font-bold text-brand-400">{day.submissionRate}%</span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <span className="text-xs font-mono text-slate-500">{day.submissionCount}/{day.totalStudents}</span>
-                    <span className="text-xs font-bold text-brand-400">{day.submissionRate}%</span>
+                  <div className="progress-bar w-full bg-slate-900 h-1.5 ml-11" style={{ width: 'calc(100% - 2.75rem)' }}>
+                    <div className={`progress-fill ${day.submissionRate >= 80 ? 'bg-brand-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]' : 'bg-brand-500/50'}`} style={{ width: `${day.submissionRate}%` }} />
                   </div>
                 </div>
-                <div className="progress-bar w-full bg-slate-900 h-1.5 ml-11" style={{ width: 'calc(100% - 2.75rem)' }}>
-                  <div className={`progress-fill ${day.submissionRate >= 80 ? 'bg-brand-500 shadow-[0_0_8px_rgba(245,158,11,0.8)]' : 'bg-brand-500/50'}`} style={{ width: `${day.submissionRate}%` }} />
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
 

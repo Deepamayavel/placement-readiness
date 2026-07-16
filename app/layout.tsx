@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import Sidebar from '@/components/Sidebar'
+import { Analytics } from '@vercel/analytics/next'
 
 const OWNER = process.env.NEXT_PUBLIC_GITHUB_OWNER ?? 'brittytino'
 const REPO  = process.env.NEXT_PUBLIC_GITHUB_REPO  ?? 'placement-readiness'
@@ -55,6 +56,7 @@ export default function RootLayout({
             </footer>
           </main>
         </div>
+        <Analytics />
       </body>
     </html>
   )

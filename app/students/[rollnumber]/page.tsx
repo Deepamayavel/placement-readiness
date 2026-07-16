@@ -9,6 +9,7 @@ import {
 import Heatmap from '@/components/Heatmap'
 import MarkdownRenderer from '@/components/MarkdownRenderer'
 import Avatar from '@/components/Avatar'
+import { getMission } from '@/lib/missions'
 
 interface Props {
   params: Promise<{ rollnumber: string }>
@@ -16,9 +17,13 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { rollnumber } = await params
+  const { roster } = await getAllData()
+  const student = roster[rollnumber]
   return {
-    title: `Student ${rollnumber}`,
-    description: `Score breakdown, attendance, and submissions for ${rollnumber}.`,
+    title: student ? `${student.name} — Student Profile` : `Student ${rollnumber}`,
+    description: student
+      ? `Score breakdown, attendance, and mission submissions for ${student.name} (${rollnumber}).`
+      : `Score breakdown and attendance for ${rollnumber}.`,
   }
 }
 
@@ -40,8 +45,7 @@ export default async function StudentProfilePage({ params }: Props) {
     s => s === 'present' || s === 'manual-present'
   ).length
 
-  // Fetch markdown files on-demand (only when this page is opened)
-  // We show latest day's reflection and prompts as a preview
+  // Fetch markdown files on-demand for latest day's preview
   const latestDay = daysRun[daysRun.length - 1]
   let reflectionContent: string | null = null
   let promptsContent: string | null = null
@@ -53,8 +57,10 @@ export default async function StudentProfilePage({ params }: Props) {
     ])
   }
 
+  const latestMission = latestDay ? getMission(latestDay) : undefined
+
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-fade-in pb-12">
       {/* Breadcrumb */}
       <div className="text-sm text-slate-500">
         <Link href="/leaderboard" className="hover:text-slate-300 transition-colors">Leaderboard</Link>
@@ -98,7 +104,7 @@ export default async function StudentProfilePage({ params }: Props) {
             <div className="text-4xl font-bold text-white tabular-nums">{score?.total ?? 0}</div>
             <div className="text-xs text-slate-500">total points</div>
             <div className={`text-sm mt-1 ${presentCount / Math.max(daysRun.length, 1) >= 0.8 ? 'text-brand-400' : 'text-yellow-400'}`}>
-              {presentCount}/{daysRun.length} days present
+              {presentCount}/{daysRun.length} missions attended
             </div>
           </div>
         </div>
@@ -106,39 +112,48 @@ export default async function StudentProfilePage({ params }: Props) {
 
       {/* Attendance heatmap */}
       <div className="card">
-        <h2 className="font-bold text-white mb-3">Attendance</h2>
+        <h2 className="font-bold text-white mb-3">Mission Attendance</h2>
         <Heatmap attendance={studentAtt} daysRun={daysRun} showLabels />
       </div>
 
-      {/* Score breakdown by day */}
+      {/* Score breakdown by mission */}
       {score && Object.keys(score.byDay).length > 0 && (
         <div className="card">
-          <h2 className="font-bold text-white mb-4">Score Breakdown</h2>
+          <h2 className="font-bold text-white mb-4">Score Breakdown by Mission</h2>
           <div className="space-y-4">
             {Object.entries(score.byDay)
               .sort(([a], [b]) => a.localeCompare(b))
               .map(([day, dayScore]) => {
-                const num = parseInt(day.replace('day', ''), 10)
+                const mission = getMission(day)
                 const dayTotal = dayScore.submitted + dayScore.quality + dayScore.reflection + dayScore.prompting + dayScore.documentation
                 const isPresent = studentAtt[day] === 'present' || studentAtt[day] === 'manual-present'
+
+                // Friendly label: mission name if known, else formatted date
+                const missionLabel = mission?.missionName ?? new Date(day).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
 
                 return (
                   <div key={day}>
                     <div className="flex items-center justify-between mb-2">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {mission && (
+                          <span className="text-base">{mission.companyIcon}</span>
+                        )}
                         <Link
                           href={`/activities/${day}`}
                           className="font-semibold text-white hover:text-brand-400 transition-colors text-sm"
                         >
-                          Day {num}
+                          {missionLabel}
                         </Link>
                         {isPresent ? (
-                          <span className="badge-green text-xs">present</span>
+                          <span className="badge-green text-xs">✓ completed</span>
                         ) : (
-                          <span className="badge-red text-xs">absent</span>
+                          <span className="badge-red text-xs">✗ missed</span>
                         )}
                         {studentAtt[day] === 'manual-present' && (
                           <span className="badge-yellow text-xs">manual</span>
+                        )}
+                        {mission && (
+                          <span className="text-[10px] text-slate-500">{mission.skill}</span>
                         )}
                       </div>
                       <span className="font-bold text-white tabular-nums">{dayTotal}/45</span>
@@ -164,14 +179,13 @@ export default async function StudentProfilePage({ params }: Props) {
                       </div>
                     )}
 
-                    {/* Day link */}
                     {isPresent && (
                       <div className="mt-2">
                         <Link
-                          href={`/activities/${day}`}
+                          href={`/activities/${day}/${rollnumber}`}
                           className="text-xs text-brand-400 hover:text-brand-300 transition-colors"
                         >
-                          View day {num} submissions →
+                          View submission for {missionLabel} →
                         </Link>
                       </div>
                     )}
@@ -191,11 +205,11 @@ export default async function StudentProfilePage({ params }: Props) {
         </div>
       )}
 
-      {/* Latest day markdown preview */}
+      {/* Latest mission markdown preview */}
       {latestDay && (reflectionContent || promptsContent) && (
         <div className="space-y-4">
           <h2 className="font-bold text-white text-lg">
-            Latest Submission — Day {parseInt(latestDay.replace('day', ''), 10)}
+            Latest Submission — {latestMission?.missionName ?? new Date(latestDay).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}
           </h2>
 
           {reflectionContent && (
