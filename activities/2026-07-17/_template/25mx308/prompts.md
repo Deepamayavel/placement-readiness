@@ -1,0 +1,1 @@
+Hey we are doing a placement prep serious where we look into important stuff on different companies, could you look into today's task and provide me a proper read.md file that I can submit for it on git (where it is being tracked ) and also a clear explanation on what is asked and what you put into that README.md file:
